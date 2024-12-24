@@ -1,9 +1,10 @@
+// Imports
 require("dotenv").config();
-
 const mongoose = require("./db");
 const { create: createMenuItem } = require("./models/menuItems");
 const { create: createOrder } = require("./models/orders");
-// create some new menu items
+
+// Creates some new menu items
 const menuItems = [
   {
     name: "Pizza",
@@ -58,16 +59,18 @@ const menuItems = [
   }
 ];
 
+// A function that preloads the database with some menu items and orders
 const preload = async () => {
-  // drop the database
+  // Drop the database
   await mongoose.connection.collections.menuitems.drop();
   await mongoose.connection.collections.orders.drop();
   const createdMenuItems = await Promise.all(
     menuItems.map((item) => createMenuItem(item))
   );
+
   // eslint-disable-next-line no-console
   // console.log("createdMenuItems", createdMenuItems);
-  // create some new orders
+  // Create some new orders
   const orders = [
     {
       name: "Krang Floogleborg",
@@ -181,11 +184,14 @@ const preload = async () => {
   const createdOrders = await Promise.all(
     orders.map((order) => createOrder(order))
   );
+
   // eslint-disable-next-line no-console
   console.log("createdOrders", createdOrders);
   if (require.main === module) process.exit(0);
 };
+
 if (require.main === module) {
   preload();
 }
+
 module.exports = preload;

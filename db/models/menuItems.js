@@ -1,5 +1,9 @@
+// Creates a structure of documents for the menu items collection
+
+// Imports
 const mongoose = require("../db.js");
 
+// Defines the document structure for the menu items collection
 const menuItemsSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -18,12 +22,16 @@ const menuItemsSchema = new mongoose.Schema({
     type: String
   }
 });
+
+// Serializes the menu items objects to JSON 
 menuItemsSchema.set("toJSON", {
   virtuals: true
 });
-// menu model
+
+// Creates menu model
 const MenuItems = mongoose.model("MenuItems", menuItemsSchema);
 
+// A function that fetches all menu items
 const getAll = async () => {
   try {
     const menuItems = await MenuItems.find();
@@ -33,6 +41,7 @@ const getAll = async () => {
   }
 };
 
+// A function that fetches one menu item by its ID
 const getOne = async (id) => {
   try {
     const menuItem = await MenuItems.findById(id);
@@ -42,6 +51,7 @@ const getOne = async (id) => {
   }
 };
 
+// Creates and inserts a new MenuItems document to the collection 
 const create = async (body) => {
   try {
     const menuItem = await MenuItems.create(body);
