@@ -33,4 +33,14 @@ const create = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, create };
+// A function that handles HTTP requests to update a new menu item
+const update = async (req, res) => {
+  try {
+    const menu = await MenuItems.update(req.params.id, req.body);
+    res.send(menu);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+module.exports = { getAll, getOne, create, update };

@@ -51,7 +51,7 @@ const getOne = async (id) => {
   }
 };
 
-// Creates and inserts a new MenuItems document to the collection 
+// Creates and inserts a new MenuItems document to the collection  
 const create = async (body) => {
   try {
     const menuItem = await MenuItems.create(body);
