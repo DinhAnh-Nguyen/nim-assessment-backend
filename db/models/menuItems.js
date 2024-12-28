@@ -23,7 +23,7 @@ const menuItemsSchema = new mongoose.Schema({
   }
 });
 
-// Serializes the menu items objects to JSON 
+// Serializes the menu items objects to JSON
 menuItemsSchema.set("toJSON", {
   virtuals: true
 });
@@ -51,7 +51,7 @@ const getOne = async (id) => {
   }
 };
 
-// Creates and inserts a new MenuItems document to the collection  
+// Creates and inserts a new MenuItems document to the collection
 const create = async (body) => {
   try {
     const menuItem = await MenuItems.create(body);
@@ -61,4 +61,22 @@ const create = async (body) => {
   }
 };
 
-module.exports = { getAll, getOne, create, MenuItems };
+// A function that updates a menu item
+const update = async (id, body) => {
+  const menuItem = await MenuItems.findByIdAndUpdate(id, body, { new: true });
+  return menuItem;
+};
+
+// A function that removes a menu item
+const remove = async (id) => {
+  const menuItem = await MenuItems.findByIdAndDelete(id);
+  return menuItem.id;
+};
+
+// A function that fetches all orders by status
+const getByNameOrDesc = async (status) => {
+  const menuItem = await MenuItems.find({ status }).populate("items");
+  return menuItem;
+};
+
+module.exports = { getAll, getOne, create, update, remove, getByNameOrDesc, MenuItems };
