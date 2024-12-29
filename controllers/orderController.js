@@ -88,23 +88,24 @@ const getTotalSales = async (req, res) => {
       query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
     }
 
-    // Fetch all orders using the existing getAll function
-    const orders = await Order.getAll(query);
+    // Fetch all orders and populate items
+    const orders = await Order.find(query).populate("items.item");
 
-    // Calculate total sales from orders
+    // Calculate total sales
     const totalSales = orders.reduce((total, order) => {
       const orderTotal = order.items.reduce(
-        (sum, item) => sum + item.item.price * item.quantity,
+        (sum, item) => sum + (item.item?.price || 0) * item.quantity,
         0
       );
       return total + orderTotal;
     }, 0);
 
-    res.send({ total: totalSales });
+    res.json({ total: totalSales });
   } catch (error) {
     res.status(500).send(error);
   }
 };
+
 
 module.exports = {
   getAll,

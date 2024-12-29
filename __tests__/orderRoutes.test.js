@@ -89,6 +89,7 @@ describe("routes", () => {
     it("should return the total sales and have the correct total", async () => {
       await Order.create(testOrder);
       const response = await request(server).get("/api/orders/total-sales");
+      console.log(response.body);
       expect(response.body).toBeInstanceOf(Object);
       expect(response.body.total).toBe(1.99);
     });

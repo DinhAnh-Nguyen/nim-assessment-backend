@@ -89,23 +89,8 @@ const remove = async (id) => {
 
 // A function that fetches all orders by status
 const getByStatus = async (status) => {
-  console.log("Status Query:", status);
   const orders = await Order.find({ status });
   return orders;
-};
-
-const totalSales = async (req, res) => {
-  try {
-    const orders = await Order.getAll();
-    console.log(orders.items.price);
-    const total = orders.reduce((acc, order) => {
-      console.log(orders.items.price);
-      return acc + order.total;
-    }, 0);
-    res.send({ total });
-  } catch (error) {
-    res.status(500).send(error);
-  }
 };
 
 module.exports = {
@@ -115,6 +100,5 @@ module.exports = {
   update,
   remove,
   getByStatus,
-  totalSales,
   Order
 };
