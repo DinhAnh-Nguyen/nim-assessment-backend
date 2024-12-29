@@ -70,13 +70,27 @@ const update = async (id, body) => {
 // A function that removes a menu item
 const remove = async (id) => {
   const menuItem = await MenuItems.findByIdAndDelete(id);
-  return menuItem.id;
+  return menuItem ? menuItem.id : null;
 };
 
-// A function that fetches all orders by status
-const getByNameOrDesc = async (status) => {
-  const menuItem = await MenuItems.find({ status }).populate("items");
+// A function that fetches menu items by name or description
+const getByNameOrDesc = async (query) => {
+  const menuItem = await MenuItems.find({
+    $or: [
+      { name: { $regex: query, $options: "i" } },
+      { description: { $regex: query, $options: "i" } }
+    ]
+  });
+
   return menuItem;
 };
 
-module.exports = { getAll, getOne, create, update, remove, getByNameOrDesc, MenuItems };
+module.exports = {
+  getAll,
+  getOne,
+  create,
+  update,
+  remove,
+  getByNameOrDesc,
+  MenuItems
+};

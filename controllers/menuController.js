@@ -50,16 +50,18 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   try {
     const menu = await MenuItems.remove(req.params.id);
-    res.send(menu);
+    res.send(menu.toString());
   } catch (error) {
     res.status(500).send(error);
   }
 };
 
-// A function that handles HTTP requests to retrieve all orders by customer
+// A function that handles HTTP requests to retrieve all menu items by name or description
 const getByNameOrDesc = async (req, res) => {
   try {
-    const menu = await MenuItems.getByNameOrDesc(req.params.id);
+    const { q } = req.query;
+    const menu = await MenuItems.getByNameOrDesc(q);
+    console.log("Search Query: ", q);
     res.send(menu);
   } catch (error) {
     res.status(500).send(error);

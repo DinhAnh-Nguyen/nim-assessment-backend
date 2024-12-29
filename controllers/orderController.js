@@ -70,8 +70,37 @@ const getByCustomer = async (req, res) => {
 // A function that handles HTTP requests to retrieve all orders by status
 const getByStatus = async (req, res) => {
   try {
-    const orders = await Order.getByStatus(req.params.status);
+    const { s } = req.query;
+    const orders = await Order.getByStatus(s);
     res.send(orders);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+const getTotalSales = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Use a filter if a date range is provided
+    const query = {};
+    if (startDate && endDate) {
+      query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    }
+
+    // Fetch all orders using the existing getAll function
+    const orders = await Order.getAll(query);
+
+    // Calculate total sales from orders
+    const totalSales = orders.reduce((total, order) => {
+      const orderTotal = order.items.reduce(
+        (sum, item) => sum + item.item.price * item.quantity,
+        0
+      );
+      return total + orderTotal;
+    }, 0);
+
+    res.send({ total: totalSales });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -84,5 +113,6 @@ module.exports = {
   update,
   remove,
   getByCustomer,
-  getByStatus
+  getByStatus,
+  getTotalSales
 };
