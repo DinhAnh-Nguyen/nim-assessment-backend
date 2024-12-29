@@ -7,9 +7,9 @@ const MenuItems = require("../db/models/menuItems.js");
 const getAll = async (req, res) => {
   try {
     const menu = await MenuItems.getAll();
-    res.send(menu);
+    return res.send(menu);
   } catch (error) {
-    res.status(500).send(error);
+    return res.status(500).send(error);
   }
 };
 
@@ -36,11 +36,11 @@ const create = async (req, res) => {
 // A function that handles HTTP requests to update a new menu item
 const update = async (req, res) => {
   try {
-    const menu = await MenuItems.update(req.params.id, {
-      ...req.body,
-      updatedAt: new Date()
-    });
-    res.send(menu);
+    const { id } = req.params;
+    const updatedFields = { ...req.body, updatedAt: new Date() };
+
+    const menu = await MenuItems.update(id, updatedFields);
+    res.send({ ...menu.toJSON(), updatedAt: updatedFields.updatedAt });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -61,7 +61,7 @@ const getByNameOrDesc = async (req, res) => {
   try {
     const { q } = req.query;
     const menu = await MenuItems.getByNameOrDesc(q);
-    console.log("Search Query: ", q);
+
     res.send(menu);
   } catch (error) {
     res.status(500).send(error);

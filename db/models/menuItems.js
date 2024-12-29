@@ -63,7 +63,8 @@ const create = async (body) => {
 
 // A function that updates a menu item
 const update = async (id, body) => {
-  const menuItem = await MenuItems.findByIdAndUpdate(id, body, { new: true });
+  const updatedBody = { ...body, updatedAt: new Date() };
+  const menuItem = await MenuItems.findByIdAndUpdate(id, updatedBody, { new: true });
   return menuItem;
 };
 
